@@ -23,4 +23,9 @@ public class LinkEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    public LinkEntity(String sourceLink, String shortLink, UserEntity user) {
+        this.sourceLink = sourceLink;
+        this.shortLink = shortLink;
+        this.user = user;
+    }
 }

@@ -1,7 +1,9 @@
 package com.ultimate.ultimatelinks.exceptions.handling;
 
-import com.ultimate.ultimatelinks.exceptions.UserAlreadyExistException;
-import com.ultimate.ultimatelinks.exceptions.UserIsNotExistException;
+import com.ultimate.ultimatelinks.exceptions.linkEx.LinkAlreadyExistException;
+import com.ultimate.ultimatelinks.exceptions.linkEx.LinkIsNotExistException;
+import com.ultimate.ultimatelinks.exceptions.userEx.UserAlreadyExistException;
+import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,5 +35,18 @@ public class CustomExceptionHandler {
         return new ResponseError(HttpStatus.NOT_FOUND, "Пользователь не существует!");
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseError handleLinkExistException(LinkAlreadyExistException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ResponseError(HttpStatus.CONFLICT, "Ссылка уже существует!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseError handleLinkExistException(LinkIsNotExistException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ResponseError(HttpStatus.NOT_FOUND, "Ссылка не существует!");
+    }
 
 }

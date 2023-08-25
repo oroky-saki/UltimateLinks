@@ -2,8 +2,8 @@ package com.ultimate.ultimatelinks.service;
 
 import com.ultimate.ultimatelinks.dto.UserDto;
 import com.ultimate.ultimatelinks.entities.UserEntity;
-import com.ultimate.ultimatelinks.exceptions.UserAlreadyExistException;
-import com.ultimate.ultimatelinks.exceptions.UserIsNotExistException;
+import com.ultimate.ultimatelinks.exceptions.userEx.UserAlreadyExistException;
+import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

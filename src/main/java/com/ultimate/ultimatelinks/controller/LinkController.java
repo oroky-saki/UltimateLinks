@@ -1,12 +1,11 @@
 package com.ultimate.ultimatelinks.controller;
 
+import com.ultimate.ultimatelinks.dto.LinkDtoFromUser;
+import com.ultimate.ultimatelinks.dto.LinkDtoToUser;
 import com.ultimate.ultimatelinks.service.LinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/links")
@@ -16,10 +15,9 @@ public class LinkController {
 
     private final LinkService linkService;
 
-    @GetMapping("/test")
-    public ResponseEntity<Object> getServerInfo() {
-        ;
-        return ResponseEntity.ok(linkService.checkSP());
+    @PutMapping("/new")
+    public ResponseEntity<LinkDtoToUser> createShortLink (@RequestBody LinkDtoFromUser linkDtoFromUser) {
+        return ResponseEntity.status(201).body(linkService.createLink(linkDtoFromUser));
     }
 
 }
