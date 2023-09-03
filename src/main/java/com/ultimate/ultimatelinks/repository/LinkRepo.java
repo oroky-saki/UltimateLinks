@@ -9,9 +9,11 @@ import java.util.List;
 
 @Repository
 public interface LinkRepo extends CrudRepository<LinkEntity, Long> {
-    LinkEntity findBySourceLink(String sourceLink);
 
-    LinkEntity findByUserIdAndShortLink(Long userId, String shortLink);
+    LinkEntity findByShortLink(String shortLink);
+
+    LinkEntity findByUserIdAndSourceLink(Long userId, String sourceLink);
 
     List<LinkEntity> findAllByUser(UserEntity user);
+
 }

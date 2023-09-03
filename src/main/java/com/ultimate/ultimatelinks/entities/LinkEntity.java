@@ -17,6 +17,7 @@ public class LinkEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String sourceLink;
+    @Column(unique = true)
     private String shortLink;
 
     @ManyToOne

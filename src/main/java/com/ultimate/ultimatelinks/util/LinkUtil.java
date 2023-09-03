@@ -2,25 +2,24 @@ package com.ultimate.ultimatelinks.util;
 
 import org.springframework.stereotype.Component;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.Random;
 
 @Component
 public class LinkUtil {
 
+    private Random random = new Random();
+    private char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+
+    private char getRandomChar() {
+        return chars[random.nextInt(chars.length)];
+    }
+
     public String hashLink(String sourceLink) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(sourceLink.getBytes());
-            StringBuilder hexString = new StringBuilder();
 
-            for (byte b : hashBytes) {
-                hexString.append(String.format("%02x", b));
-            }
-
-            return hexString.substring(0,6);
-        } catch (NoSuchAlgorithmException e) {
-            return e.getMessage();
+        String code = "";
+        for (int i = 0; i < 7; i++) {
+            code += getRandomChar();
         }
+        return code;
     }
 }
