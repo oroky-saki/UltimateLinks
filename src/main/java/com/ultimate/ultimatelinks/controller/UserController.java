@@ -42,12 +42,7 @@ public class UserController {
 
     @GetMapping("/link/all/{userID}")
     public ResponseEntity<Object> getUsersLink(@PathVariable Long userID) {
-        List<LinkDtoToUser> links = linkService.getAllLinks(userID);
-        if (!links.isEmpty()) {
-            return ResponseEntity.status(200).body(linkService.getAllLinks(userID));
-        } else {
-            return ResponseEntity.status(204).build();
-        }
+        return ResponseEntity.status(200).body(linkService.getAllLinks(userID));
     }
 
 }

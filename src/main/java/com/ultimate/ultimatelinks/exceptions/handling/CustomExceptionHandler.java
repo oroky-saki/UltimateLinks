@@ -22,10 +22,10 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleUserExistException(UserAlreadyExistException exception) {
         log.error(exception.getMessage(), exception);
-        return new ResponseError(HttpStatus.CONFLICT, "Пользователь уже существует!");
+        return new ResponseError(HttpStatus.BAD_REQUEST, "Пользователь уже существует!");
     }
 
     @ExceptionHandler
@@ -36,10 +36,10 @@ public class CustomExceptionHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseError handleLinkExistException(LinkAlreadyExistException exception) {
         log.error(exception.getMessage(), exception);
-        return new ResponseError(HttpStatus.CONFLICT, "Ссылка уже существует!");
+        return new ResponseError(HttpStatus.BAD_REQUEST, "Ссылка уже существует!");
     }
 
     @ExceptionHandler
