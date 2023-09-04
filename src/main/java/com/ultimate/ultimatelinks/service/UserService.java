@@ -34,4 +34,10 @@ public class UserService {
         return user.get();
     }
 
+    public String deleteUser(Long userID) {
+        Optional<UserEntity> user = userRepo.findById(userID);
+        user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
+        userRepo.deleteById(userID);
+        return "User Deleted";
+    }
 }

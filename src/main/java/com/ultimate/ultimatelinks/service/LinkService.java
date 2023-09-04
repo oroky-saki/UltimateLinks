@@ -1,5 +1,6 @@
 package com.ultimate.ultimatelinks.service;
 
+import com.ultimate.ultimatelinks.dto.LinkClicksDto;
 import com.ultimate.ultimatelinks.dto.LinkDtoFromUser;
 import com.ultimate.ultimatelinks.dto.LinkDtoToUser;
 import com.ultimate.ultimatelinks.entities.LinkEntity;
@@ -8,16 +9,16 @@ import com.ultimate.ultimatelinks.exceptions.linkEx.LinkAlreadyExistException;
 import com.ultimate.ultimatelinks.exceptions.linkEx.LinkIsNotExistException;
 import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
 import com.ultimate.ultimatelinks.mapper.LinkMapper;
+import com.ultimate.ultimatelinks.repository.LinkClickRepo;
 import com.ultimate.ultimatelinks.repository.LinkRepo;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import com.ultimate.ultimatelinks.util.LinkUtil;
-import jakarta.persistence.PersistenceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,6 +32,8 @@ public class LinkService {
     private final UserRepo userRepo;
     private final LinkUtil linkUtil;
     private final LinkMapper linkMapper;
+    private final LinkClickRepo clickRepo;
+    private final LinkClickService clickService;
 
     public LinkDtoToUser createLink(LinkDtoFromUser linkDtoFromUser) {
         String sourceLink = linkDtoFromUser.getSourceLink();
@@ -71,7 +74,36 @@ public class LinkService {
             throw new LinkIsNotExistException("Link is NOT exist!");
         }
 
-        //clickService.createClick(link);
+        clickService.createClick(link);
         return link.getSourceLink();
     }
+
+    // Удаление ссылки
+    public String deleteLink(Long linkID) {
+        Optional<LinkEntity> link = linkRepo.findById(linkID);
+        link.orElseThrow(() -> new LinkIsNotExistException("Link is Not Exist"));
+        linkRepo.deleteById(linkID);
+        return "Link Deleted";
+    }
+
+    // Получение информации о ссылке по ID
+    public LinkClicksDto getLinkInfo(Long linkID) {
+        Optional<LinkEntity> link = linkRepo.findById(linkID);
+        link.orElseThrow(() -> new LinkIsNotExistException("Link is Not Exist"));
+
+        LinkClicksDto linkDto = new LinkClicksDto(
+                link.get().getId(),
+                link.get().getSourceLink(),
+                domain + link.get().getShortLink(),
+                clickRepo.countByLinkId(link.get().getId())
+        );
+        return linkDto;
+    }
+
+    public List<LinkDtoToUser> getAllLinks(Long userID) {
+        Optional<UserEntity> user = userRepo.findById(userID);
+        user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
+        return linkMapper.toDtoList(linkRepo.findAllByUser(user.get()));
+    }
+
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -23,6 +25,10 @@ public class LinkEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "link")
+    @JsonIgnore
+    private List<LinkClickEntity> linkClicks;
 
     public LinkEntity(String sourceLink, String shortLink, UserEntity user) {
         this.sourceLink = sourceLink;

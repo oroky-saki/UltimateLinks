@@ -20,4 +20,9 @@ public class LinkController {
         return ResponseEntity.status(201).body(linkService.createLink(linkDtoFromUser));
     }
 
+    @DeleteMapping("/{linkID}")
+    public ResponseEntity<String> deleteLink(@PathVariable Long linkID) {
+        return ResponseEntity.status(200).body(linkService.deleteLink(linkID));
+    }
+
 }

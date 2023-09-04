@@ -16,4 +16,6 @@ public interface LinkRepo extends CrudRepository<LinkEntity, Long> {
 
     List<LinkEntity> findAllByUser(UserEntity user);
 
+    LinkEntity findByUser(UserEntity user);
+
 }
