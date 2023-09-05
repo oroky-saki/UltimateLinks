@@ -22,7 +22,8 @@ public class LinkController {
 
     @DeleteMapping("/{linkID}")
     public ResponseEntity<String> deleteLink(@PathVariable Long linkID) {
-        return ResponseEntity.status(200).body(linkService.deleteLink(linkID));
+        linkService.deleteLink(linkID);
+        return ResponseEntity.status(200).build();
     }
 
 }

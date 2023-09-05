@@ -5,15 +5,18 @@ import com.ultimate.ultimatelinks.entities.LinkEntity;
 import com.ultimate.ultimatelinks.repository.LinkClickRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LinkClickService {
     private final LinkClickRepo clickRepo;
 
+    @Transactional
     public void createClick(LinkEntity link) {
         LinkClickEntity newClick = new LinkClickEntity(link, LocalDateTime.now(ZoneId.of("Asia/Yekaterinburg")));
         clickRepo.save(newClick);

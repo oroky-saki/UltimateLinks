@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,7 @@ public class LinkService {
     private final LinkMapper linkMapper;
     private final LinkClickRepo clickRepo;
     private final LinkClickService clickService;
+
 
     public LinkDtoToUser createLink(LinkDtoFromUser linkDtoFromUser) {
         String sourceLink = linkDtoFromUser.getSourceLink();
@@ -66,6 +68,7 @@ public class LinkService {
     }
 
     // Поиск полной ссылки по коду короткой
+    @Transactional
     public String findShortLink(String shortLink) {
 
         LinkEntity link = linkRepo.findByShortLink(shortLink);
@@ -79,14 +82,15 @@ public class LinkService {
     }
 
     // Удаление ссылки
-    public String deleteLink(Long linkID) {
+    @Transactional
+    public void deleteLink(Long linkID) {
         Optional<LinkEntity> link = linkRepo.findById(linkID);
         link.orElseThrow(() -> new LinkIsNotExistException("Link is Not Exist"));
         linkRepo.deleteById(linkID);
-        return "Link Deleted";
     }
 
     // Получение информации о ссылке по ID
+    @Transactional(readOnly = true)
     public LinkClicksDto getLinkInfo(Long linkID) {
         Optional<LinkEntity> link = linkRepo.findById(linkID);
         link.orElseThrow(() -> new LinkIsNotExistException("Link is Not Exist"));
@@ -100,6 +104,7 @@ public class LinkService {
         return linkDto;
     }
 
+    @Transactional(readOnly = true)
     public List<LinkDtoToUser> getAllLinks(Long userID) {
         Optional<UserEntity> user = userRepo.findById(userID);
         user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));

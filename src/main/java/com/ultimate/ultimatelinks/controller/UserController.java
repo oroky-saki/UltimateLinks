@@ -32,7 +32,8 @@ public class UserController {
 
     @DeleteMapping("/{userID}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userID) {
-        return ResponseEntity.status(200).body(userService.deleteUser(userID));
+        userService.deleteUser(userID);
+        return ResponseEntity.status(200).build();
     }
 
     @GetMapping("/link/{linkID}")

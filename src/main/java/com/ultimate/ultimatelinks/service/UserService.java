@@ -7,14 +7,17 @@ import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
 
     private final UserRepo userRepo;
+
 
     public UserEntity createUser(UserDto user) {
             String email = user.getEmail();
@@ -28,6 +31,7 @@ public class UserService {
             return userRepo.save(new UserEntity(email, password, name));
     }
 
+    @Transactional(readOnly = true)
     public UserEntity getUserInfo(Long id) {
         Optional<UserEntity> user = userRepo.findById(id);
         user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
