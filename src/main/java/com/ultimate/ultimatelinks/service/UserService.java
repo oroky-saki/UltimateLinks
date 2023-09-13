@@ -1,14 +1,15 @@
 package com.ultimate.ultimatelinks.service;
 
+import com.ultimate.ultimatelinks.dto.ReturnedUserDto;
 import com.ultimate.ultimatelinks.dto.UserDto;
 import com.ultimate.ultimatelinks.entities.UserEntity;
 import com.ultimate.ultimatelinks.exceptions.userEx.UserAlreadyExistException;
 import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
+import com.ultimate.ultimatelinks.mapper.UserMapper;
 import com.ultimate.ultimatelinks.repository.RoleRepo;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import com.ultimate.ultimatelinks.security.Role;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,10 @@ public class UserService {
 
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
+    private final UserMapper userMapper;
 
 
-    public UserEntity createUser(UserDto user) {
+    public ReturnedUserDto createUser(UserDto user) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String email = user.getEmail();
@@ -43,15 +45,15 @@ public class UserService {
             throw new UserAlreadyExistException("Пользователь уже существует!");
         }
 
-        return userRepo.save(newUser);
+        return userMapper.toDto(userRepo.save(newUser));
     }
 
 
     @Transactional(readOnly = true)
-    public UserEntity getUserInfo(Long id) {
+    public ReturnedUserDto getUserInfo(Long id) {
         Optional<UserEntity> user = userRepo.findById(id);
         user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
-        return user.get();
+        return userMapper.toDto(user.get());
     }
 
     public void deleteUser(Long userID) {

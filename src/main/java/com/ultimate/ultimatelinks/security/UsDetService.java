@@ -2,7 +2,6 @@ package com.ultimate.ultimatelinks.security;
 
 import com.ultimate.ultimatelinks.entities.UserEntity;
 import com.ultimate.ultimatelinks.repository.UserRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

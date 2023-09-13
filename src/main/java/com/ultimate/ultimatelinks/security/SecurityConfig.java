@@ -21,10 +21,8 @@ public class SecurityConfig {
                 .httpBasic(httpSecurityHttpBasicConfigurer -> {})
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeHttpRequests ->
-                        authorizeHttpRequests.requestMatchers("/links/**", "/user/**").authenticated().anyRequest().permitAll())
+                        authorizeHttpRequests.requestMatchers("/links/**", "/user/**").hasRole("USER").anyRequest().permitAll())
                 .build();
-        //hasRole("USER")
-
     }
 
     @Bean
