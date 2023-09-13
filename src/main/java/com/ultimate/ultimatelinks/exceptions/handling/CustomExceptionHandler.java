@@ -6,6 +6,7 @@ import com.ultimate.ultimatelinks.exceptions.userEx.UserAlreadyExistException;
 import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -47,6 +48,13 @@ public class CustomExceptionHandler {
     public ResponseError handleLinkExistException(LinkIsNotExistException exception) {
         log.error(exception.getMessage(), exception);
         return new ResponseError(HttpStatus.NOT_FOUND, "Ссылка не существует!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseError handleUserNotFoundException(UsernameNotFoundException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ResponseError(HttpStatus.NOT_FOUND, "ТАКОЙ пользователь уже существует!");
     }
 
 }

@@ -1,7 +1,6 @@
 package com.ultimate.ultimatelinks.controller;
 
 import com.ultimate.ultimatelinks.dto.LinkClicksDto;
-import com.ultimate.ultimatelinks.dto.LinkDtoToUser;
 import com.ultimate.ultimatelinks.dto.UserDto;
 import com.ultimate.ultimatelinks.service.LinkService;
 import com.ultimate.ultimatelinks.service.UserService;
@@ -9,10 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
-@RequestMapping("/user")
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class UserController {
@@ -25,23 +22,23 @@ public class UserController {
         return ResponseEntity.status(201).body(userService.createUser(user));
     }
 
-    @GetMapping("/info/{id}")
+    @GetMapping("/user/info/{id}")
     public ResponseEntity<Object> getUser(@PathVariable Long id) {
         return ResponseEntity.status(200).body(userService.getUserInfo(id));
     }
 
-    @DeleteMapping("/{userID}")
+    @DeleteMapping("/user/{userID}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userID) {
         userService.deleteUser(userID);
         return ResponseEntity.status(200).build();
     }
 
-    @GetMapping("/link/{linkID}")
+    @GetMapping("/user/link/{linkID}")
     public ResponseEntity<LinkClicksDto> getLinkInfo(@PathVariable Long linkID) {
         return ResponseEntity.status(200).body(linkService.getLinkInfo(linkID));
     }
 
-    @GetMapping("/link/all/{userID}")
+    @GetMapping("/user/link/all/{userID}")
     public ResponseEntity<Object> getUsersLink(@PathVariable Long userID) {
         return ResponseEntity.status(200).body(linkService.getAllLinks(userID));
     }

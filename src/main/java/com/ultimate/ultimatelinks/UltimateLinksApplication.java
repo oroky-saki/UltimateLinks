@@ -9,5 +9,4 @@ public class UltimateLinksApplication {
     public static void main(String[] args) {
         SpringApplication.run(UltimateLinksApplication.class, args);
     }
-
 }

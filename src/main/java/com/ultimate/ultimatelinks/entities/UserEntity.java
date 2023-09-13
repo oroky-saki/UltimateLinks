@@ -1,9 +1,11 @@
 package com.ultimate.ultimatelinks.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ultimate.ultimatelinks.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -23,6 +25,12 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
     private List<LinkEntity> links;
+
+    @ManyToMany
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
     public UserEntity(String email, String password, String name) {
         this.email = email;
