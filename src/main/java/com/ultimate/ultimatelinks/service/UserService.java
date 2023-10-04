@@ -8,7 +8,7 @@ import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
 import com.ultimate.ultimatelinks.mapper.UserMapper;
 import com.ultimate.ultimatelinks.repository.RoleRepo;
 import com.ultimate.ultimatelinks.repository.UserRepo;
-import com.ultimate.ultimatelinks.security.Role;
+import com.ultimate.ultimatelinks.entities.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,9 +41,8 @@ public class UserService {
         newUser.setRoles(roles);
 
         if (userRepo.findByEmail(email) != null) {
-            throw new UserAlreadyExistException("User Is Not Exists!");
+            throw new UserAlreadyExistException(String.format("User with email '%s' Already Exists!", email));
         }
-
         return userMapper.toDto(userRepo.save(newUser));
     }
 
@@ -51,12 +50,13 @@ public class UserService {
     @Transactional(readOnly = true)
     public ReturnedUserDto getUserInfo(Long id) {
         UserEntity user = userRepo.findById(id)
-                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!"));
+                .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", id)));
         return userMapper.toDto(user);
     }
 
     public void deleteUser(Long userID) {
         userRepo.deleteById(userRepo.findById(userID)
-                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!")).getId());
+                .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", userID)))
+                .getId());
     }
 }

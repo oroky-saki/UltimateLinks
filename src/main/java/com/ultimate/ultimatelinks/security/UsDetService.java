@@ -1,5 +1,6 @@
 package com.ultimate.ultimatelinks.security;
 
+import com.ultimate.ultimatelinks.entities.Role;
 import com.ultimate.ultimatelinks.entities.UserEntity;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;

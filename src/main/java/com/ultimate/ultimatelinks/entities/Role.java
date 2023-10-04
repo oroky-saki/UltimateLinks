@@ -1,4 +1,4 @@
-package com.ultimate.ultimatelinks.security;
+package com.ultimate.ultimatelinks.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
