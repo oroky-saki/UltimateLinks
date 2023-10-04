@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,14 +44,14 @@ public class LinkService {
         // Если пользователь уже создал такую ссылку - проверка по полной ссылке И ID пользователя
         oldLink = linkRepo.findByUserIdAndSourceLink(userID, sourceLink);
         if (oldLink!=null) {
-            throw new LinkAlreadyExistException("Link already exist");
+            throw new LinkAlreadyExistException("Link Already Exists!");
         }
 
-        Optional<UserEntity> user = userRepo.findById(userID);
-        user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
+        UserEntity user = userRepo.findById(userID)
+                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!"));
 
         // Получение успешно сохраненной ссылки для возврата клиенту
-        LinkEntity newLink = saveLink(sourceLink, user.get());
+        LinkEntity newLink = saveLink(sourceLink, user);
 
         newLink.setShortLink(domain + newLink.getShortLink());
         return linkMapper.toDto(newLink);
@@ -63,8 +62,7 @@ public class LinkService {
     private LinkEntity saveLink(String sourceLink, UserEntity user) {
         String shortLink = linkUtil.hashLink(sourceLink);
         LinkEntity newLink = new LinkEntity(sourceLink, shortLink, user);
-        linkRepo.save(newLink);
-        return newLink;
+        return linkRepo.save(newLink);
     }
 
     // Поиск полной ссылки по коду короткой
@@ -74,7 +72,7 @@ public class LinkService {
         LinkEntity link = linkRepo.findByShortLink(shortLink);
 
         if (link == null) {
-            throw new LinkIsNotExistException("Link is NOT exist!");
+            throw new LinkIsNotExistException("Link is NOT exists!");
         }
 
         clickService.createClick(link);
@@ -84,31 +82,31 @@ public class LinkService {
     // Удаление ссылки
     @Transactional
     public void deleteLink(Long linkID) {
-        Optional<LinkEntity> link = linkRepo.findById(linkID);
-        link.orElseThrow(() -> new LinkIsNotExistException("Link is Not Exist"));
-        linkRepo.deleteById(linkID);
+        linkRepo.deleteById(
+                linkRepo.findById(linkID)
+                .orElseThrow(() -> new LinkIsNotExistException("Link is Not Exists!"))
+                .getId());
     }
 
     // Получение информации о ссылке по ID
     @Transactional(readOnly = true)
     public LinkClicksDto getLinkInfo(Long linkID) {
-        Optional<LinkEntity> link = linkRepo.findById(linkID);
-        link.orElseThrow(() -> new LinkIsNotExistException("Link is Not Exist"));
+        LinkEntity link = linkRepo.findById(linkID)
+                .orElseThrow(() -> new LinkIsNotExistException("Link is Not Exists!"));
 
-        LinkClicksDto linkDto = new LinkClicksDto(
-                link.get().getId(),
-                link.get().getSourceLink(),
-                domain + link.get().getShortLink(),
-                clickRepo.countByLinkId(link.get().getId())
+        return new LinkClicksDto(
+                link.getId(),
+                link.getSourceLink(),
+                domain + link.getShortLink(),
+                clickRepo.countByLinkId(link.getId())
         );
-        return linkDto;
     }
 
     @Transactional(readOnly = true)
     public List<LinkDtoToUser> getAllLinks(Long userID) {
-        Optional<UserEntity> user = userRepo.findById(userID);
-        user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
-        return linkMapper.toDtoList(linkRepo.findAllByUser(user.get()));
+        UserEntity user = userRepo.findById(userID)
+                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!"));
+        return linkMapper.toDtoList(linkRepo.findAllByUser(user));
     }
 
 }

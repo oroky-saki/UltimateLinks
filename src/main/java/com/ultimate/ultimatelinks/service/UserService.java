@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ public class UserService {
         newUser.setRoles(roles);
 
         if (userRepo.findByEmail(email) != null) {
-            throw new UserAlreadyExistException("Пользователь уже существует!");
+            throw new UserAlreadyExistException("User Is Not Exists!");
         }
 
         return userMapper.toDto(userRepo.save(newUser));
@@ -51,14 +50,13 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ReturnedUserDto getUserInfo(Long id) {
-        Optional<UserEntity> user = userRepo.findById(id);
-        user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
-        return userMapper.toDto(user.get());
+        UserEntity user = userRepo.findById(id)
+                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!"));
+        return userMapper.toDto(user);
     }
 
     public void deleteUser(Long userID) {
-        Optional<UserEntity> user = userRepo.findById(userID);
-        user.orElseThrow(() -> new UserIsNotExistException("Пользователь не существует!"));
-        userRepo.deleteById(userID);
+        userRepo.deleteById(userRepo.findById(userID)
+                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!")).getId());
     }
 }
