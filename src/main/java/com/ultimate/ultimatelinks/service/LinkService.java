@@ -13,16 +13,22 @@ import com.ultimate.ultimatelinks.repository.LinkClickRepo;
 import com.ultimate.ultimatelinks.repository.LinkRepo;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import com.ultimate.ultimatelinks.util.LinkUtil;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Validated
 public class LinkService {
 
     @Value("${app-domain: http://localhost:8080/}")
@@ -36,7 +42,7 @@ public class LinkService {
     private final LinkClickService clickService;
 
 
-    public LinkDtoToUser createLink(LinkDtoFromUser linkDtoFromUser) {
+    public LinkDtoToUser createLink(@Valid LinkDtoFromUser linkDtoFromUser) {
         String sourceLink = linkDtoFromUser.getSourceLink();
         Long userID = linkDtoFromUser.getUserID();
 
@@ -59,7 +65,7 @@ public class LinkService {
 
     // Сохранение ссылки и исключение коллизии при сгенерированной код-строке короткой ссылки
     @Retryable(maxAttempts = 5)
-    private LinkEntity saveLink(String sourceLink, UserEntity user) {
+    private LinkEntity saveLink(@NotBlank @Size(min = 8) String sourceLink, UserEntity user) {
         String shortLink = linkUtil.hashLink(sourceLink);
         LinkEntity newLink = new LinkEntity(sourceLink, shortLink, user);
         return linkRepo.save(newLink);
@@ -67,7 +73,7 @@ public class LinkService {
 
     // Поиск полной ссылки по коду короткой
     @Transactional
-    public String findShortLink(String shortLink) {
+    public String findShortLink(@NotBlank @Size(min = 7, max = 7) String shortLink) {
 
         LinkEntity link = linkRepo.findByShortLink(shortLink);
 
@@ -81,7 +87,7 @@ public class LinkService {
 
     // Удаление ссылки
     @Transactional
-    public void deleteLink(Long linkID) {
+    public void deleteLink(@Min(1) Long linkID) {
         linkRepo.deleteById(
                 linkRepo.findById(linkID)
                 .orElseThrow(() -> new LinkIsNotExistException(String.format("Link with ID '%d' is Not Exists!", linkID)))
@@ -90,7 +96,7 @@ public class LinkService {
 
     // Получение информации о ссылке по ID
     @Transactional(readOnly = true)
-    public LinkClicksDto getLinkInfo(Long linkID) {
+    public LinkClicksDto getLinkInfo(@Min(1) Long linkID) {
         LinkEntity link = linkRepo.findById(linkID)
                 .orElseThrow(() -> new LinkIsNotExistException(String.format("Link with ID '%d' is Not Exists!", linkID)));
 
@@ -103,7 +109,7 @@ public class LinkService {
     }
 
     @Transactional(readOnly = true)
-    public List<LinkDtoToUser> getAllLinks(Long userID) {
+    public List<LinkDtoToUser> getAllLinks(@Min(1) Long userID) {
         UserEntity user = userRepo.findById(userID)
                 .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", userID)));
         return linkMapper.toDtoList(linkRepo.findAllByUser(user));

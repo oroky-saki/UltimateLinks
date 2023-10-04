@@ -6,6 +6,7 @@ import com.ultimate.ultimatelinks.repository.LinkClickRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,6 +14,7 @@ import java.time.ZoneId;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Validated
 public class LinkClickService {
     private final LinkClickRepo clickRepo;
 

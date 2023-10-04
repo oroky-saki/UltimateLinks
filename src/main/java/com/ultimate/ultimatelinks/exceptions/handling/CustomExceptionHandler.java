@@ -4,9 +4,11 @@ import com.ultimate.ultimatelinks.exceptions.linkEx.LinkAlreadyExistException;
 import com.ultimate.ultimatelinks.exceptions.linkEx.LinkIsNotExistException;
 import com.ultimate.ultimatelinks.exceptions.userEx.UserAlreadyExistException;
 import com.ultimate.ultimatelinks.exceptions.userEx.UserIsNotExistException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,7 +56,21 @@ public class CustomExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseError handleUserNotFoundException(UsernameNotFoundException exception) {
         log.error(exception.getMessage(), exception);
-        return new ResponseError(HttpStatus.NOT_FOUND, "ТАКОЙ пользователь уже существует!");
+        return new ResponseError(HttpStatus.NOT_FOUND, "Такой пользователь уже существует!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError invalidReceivedObject(MethodArgumentNotValidException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ResponseError(HttpStatus.BAD_REQUEST, "Отправленные данные некорректны!");
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseError invalidPathParameter(ConstraintViolationException exception) {
+        log.error(exception.getMessage(), exception);
+        return new ResponseError(HttpStatus.BAD_REQUEST, "Некорректные параметры!");
     }
 
 }
