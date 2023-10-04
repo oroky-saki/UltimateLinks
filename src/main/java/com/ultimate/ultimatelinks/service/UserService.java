@@ -9,11 +9,14 @@ import com.ultimate.ultimatelinks.mapper.UserMapper;
 import com.ultimate.ultimatelinks.repository.RoleRepo;
 import com.ultimate.ultimatelinks.repository.UserRepo;
 import com.ultimate.ultimatelinks.entities.Role;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Collection;
 import java.util.List;
@@ -21,6 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Validated
 public class UserService {
 
     private final UserRepo userRepo;
@@ -28,7 +32,7 @@ public class UserService {
     private final UserMapper userMapper;
 
 
-    public ReturnedUserDto createUser(UserDto user) {
+    public ReturnedUserDto createUser(@Valid UserDto user) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String email = user.getEmail();
@@ -48,13 +52,13 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public ReturnedUserDto getUserInfo(Long id) {
+    public ReturnedUserDto getUserInfo(@Min(1) Long id) {
         UserEntity user = userRepo.findById(id)
                 .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", id)));
         return userMapper.toDto(user);
     }
 
-    public void deleteUser(Long userID) {
+    public void deleteUser(@Min(1) Long userID) {
         userRepo.deleteById(userRepo.findById(userID)
                 .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", userID)))
                 .getId());
