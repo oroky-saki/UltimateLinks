@@ -8,14 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/links")
+@RequestMapping("/link")
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class LinkController {
 
     private final LinkService linkService;
 
-    @PutMapping("/new")
+    @PutMapping("/put")
     public ResponseEntity<LinkDtoToUser> createShortLink (@RequestBody LinkDtoFromUser linkDtoFromUser) {
         return ResponseEntity.status(201).body(linkService.createLink(linkDtoFromUser));
     }

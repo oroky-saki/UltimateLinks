@@ -44,11 +44,11 @@ public class LinkService {
         // Если пользователь уже создал такую ссылку - проверка по полной ссылке И ID пользователя
         oldLink = linkRepo.findByUserIdAndSourceLink(userID, sourceLink);
         if (oldLink!=null) {
-            throw new LinkAlreadyExistException("Link Already Exists!");
+            throw new LinkAlreadyExistException(String.format("Link '%s' Already Exists!", sourceLink));
         }
 
         UserEntity user = userRepo.findById(userID)
-                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!"));
+                .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", userID)));
 
         // Получение успешно сохраненной ссылки для возврата клиенту
         LinkEntity newLink = saveLink(sourceLink, user);
@@ -72,7 +72,7 @@ public class LinkService {
         LinkEntity link = linkRepo.findByShortLink(shortLink);
 
         if (link == null) {
-            throw new LinkIsNotExistException("Link is NOT exists!");
+            throw new LinkIsNotExistException(String.format("Link '%s' is Not exists!", shortLink));
         }
 
         clickService.createClick(link);
@@ -84,7 +84,7 @@ public class LinkService {
     public void deleteLink(Long linkID) {
         linkRepo.deleteById(
                 linkRepo.findById(linkID)
-                .orElseThrow(() -> new LinkIsNotExistException("Link is Not Exists!"))
+                .orElseThrow(() -> new LinkIsNotExistException(String.format("Link with ID '%d' is Not Exists!", linkID)))
                 .getId());
     }
 
@@ -92,7 +92,7 @@ public class LinkService {
     @Transactional(readOnly = true)
     public LinkClicksDto getLinkInfo(Long linkID) {
         LinkEntity link = linkRepo.findById(linkID)
-                .orElseThrow(() -> new LinkIsNotExistException("Link is Not Exists!"));
+                .orElseThrow(() -> new LinkIsNotExistException(String.format("Link with ID '%d' is Not Exists!", linkID)));
 
         return new LinkClicksDto(
                 link.getId(),
@@ -105,7 +105,7 @@ public class LinkService {
     @Transactional(readOnly = true)
     public List<LinkDtoToUser> getAllLinks(Long userID) {
         UserEntity user = userRepo.findById(userID)
-                .orElseThrow(() -> new UserIsNotExistException("User is Not Exists!"));
+                .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", userID)));
         return linkMapper.toDtoList(linkRepo.findAllByUser(user));
     }
 

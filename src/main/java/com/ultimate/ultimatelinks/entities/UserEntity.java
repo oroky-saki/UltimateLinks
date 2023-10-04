@@ -1,7 +1,6 @@
 package com.ultimate.ultimatelinks.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ultimate.ultimatelinks.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
