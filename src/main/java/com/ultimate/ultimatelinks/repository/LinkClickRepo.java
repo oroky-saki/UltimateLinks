@@ -43,6 +43,17 @@ public interface LinkClickRepo extends CrudRepository<LinkClickEntity, Long> {
     )
     List<ClickStatsDto> statsByMinuteOnDate(@Param("link_id") Long linkID, @Param("date") String date);
 
-    @Query
+    @Query(value = """
+                   SELECT new com.ultimate.ultimatelinks.dto.ClickStatsDto(subquery.site, SUM(subquery.clicks))
+                   FROM ( SELECT COUNT(*) as clicks, lc.link.site as site, lc.link.id AS link_id
+                          FROM LinkClickEntity as lc
+                          INNER JOIN LinkEntity as l ON lc.link.id = l.id
+                          GROUP BY site, link_id
+                   ) as subquery
+                   GROUP BY subquery.site
+                   ORDER BY SUM(subquery.clicks) DESC, subquery.site
+                   LIMIT 20
+                   """
+    )
     List<ClickStatsDto> getPopularLinks();
 }
