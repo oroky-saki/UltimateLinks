@@ -38,4 +38,8 @@ public class LinkClickService {
     public List<ClickStatsDto> getClicksCountByMinutes(@Min(1) Long linkID, @NotBlank String date) {
         return clickRepo.statsByMinuteOnDate(linkID, date);
     }
+
+    public List<ClickStatsDto> getPopularLinks() {
+        return clickRepo.getPopularLinks();
+    }
 }

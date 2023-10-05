@@ -30,9 +30,13 @@ public class LinkEntity {
     @JsonIgnore
     private List<LinkClickEntity> linkClicks;
 
-    public LinkEntity(String sourceLink, String shortLink, UserEntity user) {
+    @Column(name = "site")
+    private String site;
+
+    public LinkEntity(String sourceLink, String shortLink, UserEntity user, String site) {
         this.sourceLink = sourceLink;
         this.shortLink = shortLink;
         this.user = user;
+        this.site = site;
     }
 }

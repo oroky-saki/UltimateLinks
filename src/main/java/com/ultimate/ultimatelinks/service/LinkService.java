@@ -67,7 +67,8 @@ public class LinkService {
     @Retryable(maxAttempts = 5)
     private LinkEntity saveLink(@NotBlank @Size(min = 8) String sourceLink, UserEntity user) {
         String shortLink = linkUtil.hashLink(sourceLink);
-        LinkEntity newLink = new LinkEntity(sourceLink, shortLink, user);
+        String site = linkUtil.getSiteFromSource(sourceLink);
+        LinkEntity newLink = new LinkEntity(sourceLink, shortLink, user, site);
         return linkRepo.save(newLink);
     }
 
