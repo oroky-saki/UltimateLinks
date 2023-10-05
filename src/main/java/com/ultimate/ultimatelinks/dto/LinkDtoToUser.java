@@ -22,4 +22,8 @@ public class LinkDtoToUser {
     @NotBlank
     @Size(min = 7, max = 7)
     private String shortLink;
+
+    @NotBlank
+    private String site;
+
 }

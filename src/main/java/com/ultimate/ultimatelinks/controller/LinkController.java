@@ -37,17 +37,25 @@ public class LinkController {
     }
 
     @GetMapping("/days/{linkID}")
-    public ResponseEntity<List<ClickStatsDto>> getLinkClicksByDays(@PathVariable Long linkID) {
+    public ResponseEntity<List<ClickStatsDto>> getLinkClicksByDays(
+            @PathVariable("linkID") @Min(1) Long linkID) {
         return ResponseEntity.status(200).body(clickService.getClicksCountByDays(linkID));
     }
 
     @GetMapping("/hours/{linkID}")
-    public ResponseEntity<List<ClickStatsDto>> getLinkClicksByHours(@PathVariable Long linkID, @RequestParam String date) {
+    public ResponseEntity<List<ClickStatsDto>> getLinkClicksByHours(
+            @PathVariable("linkID") @Min(1) Long linkID, @RequestParam String date) {
         return ResponseEntity.status(200).body(clickService.getClicksCountByHours(linkID, date));
     }
 
     @GetMapping("/minutes/{linkID}")
-    public ResponseEntity<List<ClickStatsDto>> getLinkClicksByMinutes(@PathVariable Long linkID, @RequestParam String date) {
+    public ResponseEntity<List<ClickStatsDto>> getLinkClicksByMinutes(
+            @PathVariable("linkID") @Min(1) Long linkID, @RequestParam String date) {
         return ResponseEntity.status(200).body(clickService.getClicksCountByMinutes(linkID, date));
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<ClickStatsDto>> getPopularLinks () {
+        return ResponseEntity.status(200).body(clickService.getPopularLinks());
     }
 }

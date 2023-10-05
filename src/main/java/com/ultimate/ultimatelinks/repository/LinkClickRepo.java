@@ -42,4 +42,7 @@ public interface LinkClickRepo extends CrudRepository<LinkClickEntity, Long> {
                    """
     )
     List<ClickStatsDto> statsByMinuteOnDate(@Param("link_id") Long linkID, @Param("date") String date);
+
+    @Query
+    List<ClickStatsDto> getPopularLinks();
 }
