@@ -19,8 +19,5 @@ public class ReturnedUserDto {
     private String email;
 
     @NotBlank
-    private String password;
-
-    @NotBlank
     private String name;
 }
