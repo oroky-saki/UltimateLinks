@@ -12,6 +12,8 @@ import com.ultimate.ultimatelinks.entities.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,9 +54,10 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public ReturnedUserDto getUserInfo(@Min(1) Long id) {
-        UserEntity user = userRepo.findById(id)
-                .orElseThrow(() -> new UserIsNotExistException(String.format("User with ID '%d' is Not Exists!", id)));
+    public ReturnedUserDto getAuthUserInfo() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        UserEntity user = userRepo.findByEmail(email);
         return userMapper.toDto(user);
     }
 

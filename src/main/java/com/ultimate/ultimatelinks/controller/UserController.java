@@ -27,10 +27,9 @@ public class UserController {
         return ResponseEntity.status(201).body(userService.createUser(user));
     }
 
-    @GetMapping("/user/info/{id}")
-    public ResponseEntity<ReturnedUserDto> getUser(
-            @PathVariable("id") @Min(1) Long id) {
-        return ResponseEntity.status(200).body(userService.getUserInfo(id));
+    @GetMapping("/user/info")
+    public ResponseEntity<ReturnedUserDto> getAuthUser() {
+        return ResponseEntity.status(200).body(userService.getAuthUserInfo());
     }
 
     @DeleteMapping("/user/{userID}")
