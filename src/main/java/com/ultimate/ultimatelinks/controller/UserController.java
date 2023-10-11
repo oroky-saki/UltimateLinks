@@ -23,19 +23,19 @@ import java.util.List;
 @RestControllerAdvice
 @Validated
 @Tag(name = "User Controller", description = "Контроллер для работы со пользователем")
-@RequestMapping("api/v1")
+@RequestMapping("api/v1/user")
 public class UserController {
 
     private final UserService userService;
     private final LinkService linkService;
 
-    @GetMapping("/user/info")
+    @GetMapping("/info")
     @Operation(summary = "Получение информации о текущем авторизованном пользователе - [возвращает пользователя]")
     public ResponseEntity<ReturnedUserDto> getAuthUser() {
         return ResponseEntity.status(200).body(userService.getAuthUserInfo());
     }
 
-    @DeleteMapping("/user/{userID}")
+    @DeleteMapping("/{userID}")
     @Operation(summary = "Удаление пользователя по userID - [возвращает пустое тело и код 200, удаляет все ссылки пользователя]")
     public ResponseEntity<String> deleteUser(
             @PathVariable("userID") @Min(1) Long userID) {
@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.status(200).build();
     }
 
-    @GetMapping("/user/link/all/{userID}")
+    @GetMapping("/link/all/{userID}")
     @Operation(summary = "Получение информации о всех ссылках пользователя по userID- [возвращает список ссылок]")
     public ResponseEntity<List<LinkDtoToUser>> getUsersLink(
             @PathVariable("userID") @Min(1) Long userID) {
