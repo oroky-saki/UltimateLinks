@@ -20,4 +20,10 @@ public class ReturnedUserDto {
 
     @NotBlank
     private String name;
+
+    public ReturnedUserDto(Long id, String email, String name) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+    }
 }

@@ -1,14 +1,11 @@
 package com.ultimate.ultimatelinks.controller;
 
-import com.ultimate.ultimatelinks.dto.LinkClicksDto;
 import com.ultimate.ultimatelinks.dto.LinkDtoToUser;
 import com.ultimate.ultimatelinks.dto.ReturnedUserDto;
-import com.ultimate.ultimatelinks.dto.UserDto;
 import com.ultimate.ultimatelinks.service.LinkService;
 import com.ultimate.ultimatelinks.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
