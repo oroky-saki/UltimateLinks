@@ -26,4 +26,10 @@ public class LinkDtoToUser {
     @NotBlank
     private String site;
 
+    public LinkDtoToUser(Long id, String sourceLink, String shortLink, String site) {
+        this.id = id;
+        this.sourceLink = sourceLink;
+        this.shortLink = shortLink;
+        this.site = site;
+    }
 }
